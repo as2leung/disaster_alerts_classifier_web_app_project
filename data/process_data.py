@@ -1,16 +1,56 @@
 import sys
+import pandas as pd
+import re
+from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
-    pass
+    messages = pd.read_csv(messages_filepath)
+    categories = pd.read_csv(categories_filepath)
+    
+    #merge datasets
+    df = messages.merge(categories, on='id')
+    
+    # create a dataframe of the 36 individual category columns
+    categories = categories.categories.str.split(";", expand=True)
+    categories.columns = ["category_" + str(i) for i in categories.columns]
+    # select the first row of the categories dataframe
+    row = categories.iloc[0]
+    # use this row to extract a list of new column names for categories.
+    # one way is to apply a lambda function that takes everything 
+    # up to the second to last character of each string with slicing
+    category_colnames = row.apply(lambda x: re.sub("^([a-z_A-Z]+)\-\d$","\g<1>",x))
+    # rename the columns of `categories`
+    categories.columns = category_colnames
+    for column in categories:
+    # set each value to be the last character of the string
+        categories[column] = categories[column].apply(lambda x: re.sub("^([a-z_A-Z]+)\-(\d)$","\g<2>",x)) 
+
+        # convert column from string to numeric
+        categories[column] = pd.to_numeric(categories[column]) 
+    # drop the original categories column from `df`
+    df.drop(columns=["categories"], inplace=True)
+    
+    df2 = pd.concat([df,categories],axis=1, join="inner")
+    
+    return df2
+    
 
 
 def clean_data(df):
-    pass
+           
+        
+    # drop duplicates
+    df.drop_duplicates(inplace=True)
+    
+    return df
+    
+    
 
 
 def save_data(df, database_filename):
-    pass  
+    engine = create_engine('sqlite:///'+ database_filename)
+    df.to_sql('messages_categorized', engine, index=False)  
 
 
 def main():
