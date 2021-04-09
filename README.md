@@ -97,7 +97,7 @@ The following are screenshots of the actual Web App. If the app is run correctly
 
 ## Download Model Pickle (large file) <a name="pickle"></a>
 
-Since the model pickle is very large in size, I have uploaded elsewhere. You can download them here. Please rename the pickle to *classifier.pkl"* and then place the pickle file into the **model** folder and follow the run steps above.
+Since the model pickle is very large in size, I have uploaded elsewhere. You can download them here. Please rename the pickle to *classifier.pkl"* and then place the pickle file into the **model** folder and follow the run steps above. I **recommend** using _"classifier_2.pkl"_.
 
 [Pickle File Download](https://drive.google.com/drive/folders/1Z7OuyjNlF5WFYrFphaP18d-TeQEb6uPX?usp=sharing)
 
