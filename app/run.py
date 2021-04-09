@@ -47,14 +47,15 @@ def tokenize(text):
     return clean_tokens
 
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
-"""Custom transformer to return bool feature for whether a text 
+    """Custom transformer to return bool feature for whether a text 
     string starts with a verb
 
-"""
+    """
     
         
     def starting_verb(self,text):
-         """ method to extract POS from first word in text string
+        
+        """ method to extract POS from first word in text string
 
         """
         sentence_list = nltk.sent_tokenize(text)
