@@ -31,6 +31,7 @@ nltk.download('averaged_perceptron_tagger')
 
 
 def load_data(database_filepath):
+    """ Load cleaned data from specified database """
     engine = create_engine('sqlite:///'+database_filepath)
     df = pd.read_sql_table('messages_categorized',engine)
     X = df["message"]
@@ -40,6 +41,7 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """ custom tokenizer to normalize raw text"""
     text = re.sub(r"[^a-zA-Z0-9]", " ", text)
     
     tokens = word_tokenize(text)
@@ -53,9 +55,15 @@ def tokenize(text):
     return clean_tokens
     
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
-    
+    """Custom transformer to return bool feature for whether a text 
+    string starts with a verb
+
+    """
         
     def starting_verb(self,text):
+        """ method to extract POS from first word in text string
+
+        """
         sentence_list = nltk.sent_tokenize(text)
         #print(sentence_list)
         for sentence in sentence_list:
@@ -75,11 +83,19 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
+        """Apply custom transformer to pd.Series"""
         X_tagged = pd.Series(X).apply(self.starting_verb)
         X_tagged = X_tagged.fillna(False)
         return pd.DataFrame(X_tagged)
 
 def build_model():
+    """ Build model with sklearn.pipeline to prevent data leak and search for
+    optimal hyperparameters with GridSearchCV and parameter dictionary
+
+    MultiOutputClassifier() is used to fit RandomForestClassifier() to all 36
+    message categories
+
+    """ 
     pipeline3 = Pipeline([
     ('features', FeatureUnion([
 
@@ -107,6 +123,18 @@ def build_model():
     
    
 def evaluate_model(model, X_test, Y_test, category_names):
+
+    """Classification report for all 36 categories to evaluate model
+
+    Key arguments:
+    
+    model (string): name of fitted model object
+    X_test (string): 1-D array of X test data
+    Y_test (string): n-D array of Y test data
+    category_names (string): Name of response category being modelled
+
+
+    """
     
     Y_pred = model.predict(X_test)
     for i in range(Y_pred.shape[1]):
@@ -120,12 +148,21 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """ Pickle final model to save model
+    
+    Key arguments:
+
+    model (string): name of model object
+    model_filepath (string): name of 
+
+    """
     joblib_file = model_filepath
     joblib.dump(model, joblib_file)
 
 
 
 def main():
+    """ Run ML pipeline """
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
