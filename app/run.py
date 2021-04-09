@@ -35,6 +35,7 @@ nltk.download('averaged_perceptron_tagger')
 app = Flask(__name__)
 
 def tokenize(text):
+    """ Custom tokenizer for pickle to work"""
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -46,9 +47,16 @@ def tokenize(text):
     return clean_tokens
 
 class StartingVerbExtractor(BaseEstimator, TransformerMixin):
+"""Custom transformer to return bool feature for whether a text 
+    string starts with a verb
+
+"""
     
         
     def starting_verb(self,text):
+         """ method to extract POS from first word in text string
+
+        """
         sentence_list = nltk.sent_tokenize(text)
         #print(sentence_list)
         for sentence in sentence_list:
@@ -68,6 +76,7 @@ class StartingVerbExtractor(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
+        """Apply custom transformer to pd.Series"""
         X_tagged = pd.Series(X).apply(self.starting_verb)
         X_tagged = X_tagged.fillna(False)
         return pd.DataFrame(X_tagged)
