@@ -42,6 +42,12 @@ def clean_data(df):
         
     # drop duplicates
     df.drop_duplicates(inplace=True)
+
+    # recode any of the values greater than 1 to 1 (should be only from the "related" 
+    # column - 192 instances)
+    # need to also cast as int as well, other wise the function changes a lot more
+    # values than the expect 192
+    df.iloc[:,4:] = df.iloc[:,4:].applymap(lambda x: 1 if int(x) > 1 else int(x))
     
     return df
     
@@ -50,7 +56,7 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     engine = create_engine('sqlite:///'+ database_filename)
-    df.to_sql('messages_categorized', engine, index=False)  
+    df.to_sql('messages_categorized', engine, index=False, if_exists='replace')  
 
 
 def main():
