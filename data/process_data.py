@@ -5,6 +5,18 @@ from sqlalchemy import create_engine
 
 
 def load_data(messages_filepath, categories_filepath):
+    """ Extract messages and categories csv and merge after transformations
+
+    Keyword arguments:
+
+    messages_filepath (string) - messages.csv location
+    categories_filepath (string) - categories.csv location
+    
+    Returns
+
+    df2 dataframe with merged contents
+
+    """
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
     
@@ -38,6 +50,7 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """ Dataframe is deduplicated and all values converted to binary values"""
            
         
     # drop duplicates
@@ -55,11 +68,22 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """ 
+    Create sqlite DB, SQL alchemy DB and export final clean dataframe to database
+
+    Keyword arguments:
+
+    df (string): Dataframe to export
+    database_filename (string): Name for final database
+
+    """
+
     engine = create_engine('sqlite:///'+ database_filename)
     df.to_sql('messages_categorized', engine, index=False, if_exists='replace')  
 
 
 def main():
+    """ main ETL script to create final database from csvs """
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
