@@ -5,6 +5,7 @@
 * [Purpose](#purpose)
 * [Running the web app](#running)
 * [Running all pipelines and web app](#full)
+* [Web App Output](#output)
 * [List of key files](#list_of_key_files)
 * [Python Libraries](#python_libraries)
 * [Download Model - Pickle](#pickle)
@@ -50,7 +51,16 @@ Next, run the "run.py" file in the app folder and then go to http://127.0.0.1:30
 
 3. Go to http://127.0.0.1:3001/
 
+## Web App Output <a name="output"></a>
 
+The following are screenshots of the actual Web App. If the app is run correctly, it should look as follows:
+
+### Web App Homepage
+
+![Homepage](https://github.com/as2leung/disaster_alerts_classifier_web_app_project/blob/main/screenshots/00_homepage.PNG)
+
+### Web App Classifier
+![User Input Page](https://github.com/as2leung/disaster_alerts_classifier_web_app_project/blob/main/screenshots/01_categorize_user_input.PNG)
 
 ## File structure and list of key files <a name="list_of_key_files"></a>
 
